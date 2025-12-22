@@ -1,0 +1,42 @@
+name: hotel_booking_app
+description: A Flutter app for hotel booking
+version: 1.0.0+1
+
+environment:
+  sdk: '^3.8.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  http: ^1.5.0
+  url_strategy: ^0.2.0
+  flip_card: ^0.7.0
+  http_parser: ^4.0.2
+  font_awesome_flutter: ^10.7.0
+  path_provider: ^2.0.15
+  url_launcher: ^6.2.10
+  #multi_select_flutter: ^4.1.4
+  image_picker: ^1.2.0
+  shimmer: ^3.0.0
+  #flutter_form_builder: ^8.1.1
+  fl_chart: ^1.1.1
+  geolocator: ^14.0.2
+  google_maps_flutter: ^2.3.1
+  #syncfusion_flutter_charts: ^31.3.0
+  google_maps_flutter_web: ^0.5.7
+  file_picker: ^8.0.0
+  flutter_image_compress: ^2.2.0
+  share_plus: ^7.2.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/LoginTheme.png
+    #- assets/excel/PartnerData.xlsx
+    - assets/LandingPageImages/LandingImage.png
+    - assets/LandingPageImages/Logo.png
+
