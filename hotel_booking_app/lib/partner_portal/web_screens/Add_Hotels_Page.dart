@@ -301,7 +301,7 @@ class _AddHotelsPageState extends State<AddHotelsPage> with SingleTickerProvider
                     children: [
                       const Text("Add Hotels", style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 25),
-                      DropdownButtonFormField<String>(value: selectedHotelType, decoration: _inputStyle("Hotel Type"), items: ['Hotel', 'Resort', 'Villa'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => selectedHotelType = v), validator: (v) => v == null ? "Required" : null),
+                      DropdownButtonFormField<String>(value: selectedHotelType, decoration: _inputStyle("Hotel Type"), items: ['Hotel', 'Home Stays', 'Dormitory', 'Farm House','Lodge', 'Party Rooms', 'Resort', 'Villa'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => selectedHotelType = v), validator: (v) => v == null ? "Required" : null),
                       const SizedBox(height: 15),
                       DropdownButtonFormField<String>(value: selectedCustomization, decoration: _inputStyle("Customization"), items: ['Yes', 'No'].map((s) => DropdownMenuItem(value: s, child: Text(s))).toList(), onChanged: (v) => setState(() => selectedCustomization = v), validator: (v) => v == null ? "Required" : null),
                       const SizedBox(height: 15),

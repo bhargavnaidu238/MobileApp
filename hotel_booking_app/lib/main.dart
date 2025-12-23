@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
 import 'screens/home_page.dart' as home;
-import 'screens/booking_function.dart';
+import 'screens/booking_function.dart'; // This should contain your BookingPage class
 import 'screens/profile.dart';
 import 'screens/booking_history_page.dart';
 import 'screens/hotels_page.dart';
@@ -63,32 +63,31 @@ class MyApp extends StatelessWidget {
               builder: (_) => pgs.PgsPage(user: user, type: type),
             );
 
-        // ✅ UNIVERSAL BOOKING NAVIGATION (HOTEL + PG)
+        // ✅ FIXED UNIVERSAL BOOKING NAVIGATION
           case '/booking':
             final args = settings.arguments as Map<String, dynamic>? ?? {};
 
-            // This can be HOTEL or PG data
+            // 1. Extract Hotel or PG data from arguments
             final Map<String, dynamic> hotelOrPg =
                 args['hotel'] as Map<String, dynamic>? ??
-                    args['pg'] as Map<String, dynamic>? ??
-                    {};
+                    args['pg'] as Map<String, dynamic>? ?? {};
 
-            // User details
-            final Map<String, dynamic> user =
-                args['user'] as Map<String, dynamic>? ??
-                    {
-                      'userId': '',
-                      'name': 'Guest User',
-                      'email': '',
-                      'mobile': ''
-                    };
+            // 2. Extract User data from arguments
+            final Map<String, dynamic> userData =
+                args['user'] as Map<String, dynamic>? ?? {
+                  'userId': '',
+                  'name': 'Guest User',
+                  'email': '',
+                  'mobile': ''
+                };
 
-            final String userId = user['userId'] ?? '';
+            // 3. Get userId explicitly
+            final String userId = (args['userId'] ?? userData['userId'] ?? '').toString();
 
             return MaterialPageRoute(
-              builder: (_) => BookingPage(
-                hotel: hotelOrPg, // <— pass hotel or PG as same variable
-                user: user,
+              builder: (context) => BookingPage(
+                hotel: hotelOrPg,
+                user: userData,
                 userId: userId,
               ),
             );

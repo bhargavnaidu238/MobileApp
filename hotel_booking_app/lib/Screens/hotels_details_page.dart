@@ -422,18 +422,40 @@ class _HotelDetailsPageState extends State<HotelDetailsPage> {
                                   SizedBox(
                                     height: 42,
                                     child: ElevatedButton(
-                                      onPressed: () {
-                                        final selectedHotel = Map<String, dynamic>.from(hotel);
-                                        selectedHotel['Room_Type'] = roomType;
-                                        selectedHotel['Room_Price'] = roomPrice;
-                                        selectedHotel['Hotel_Address'] = address;
+                                        onPressed: () {
+                                          // 1. Create a deep copy of the hotel data
+                                          final selectedHotel = Map<String, dynamic>.from(widget.hotel);
 
-                                        Navigator.pushNamed(context, '/booking', arguments: {
-                                          'hotel': selectedHotel,
-                                          'user': user,
-                                          'userId': user['userId'] ?? '',
-                                        });
-                                      },
+                                          // 2. Prepare the room map for the checkbox selection
+                                          Map<String, String> allRoomsMap = {};
+                                          for (int i = 0; i < roomTypes.length; i++) {
+                                            if (i < roomPrices.length) {
+                                              allRoomsMap[roomTypes[i].trim()] = roomPrices[i].trim();
+                                            }
+                                          }
+
+                                          // 3. Set the specific selected room (the one the user clicked "Book" on)
+                                          selectedHotel['Selected_Room_Type'] = roomType;
+                                          selectedHotel['Selected_Room_Price'] = roomPrice;
+                                          selectedHotel['Hotel_Address'] = address;
+
+                                          // 4. IMPORTANT: Keep the original format but ALSO provide the map
+                                          // We use 'Available_Rooms_Map' to avoid confusing the isPgMode logic
+                                          selectedHotel['Available_Rooms_Map'] = allRoomsMap;
+
+                                          // 5. Force the mode to NOT be PG
+                                          selectedHotel['is_hotel'] = true;
+
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/booking',
+                                            arguments: {
+                                              'hotel': selectedHotel,
+                                              'user': widget.user,
+                                              'userId': widget.user['userId'] ?? widget.user['id'] ?? '',
+                                            },
+                                          );
+                                        },
                                       style: ElevatedButton.styleFrom(backgroundColor: Colors.green, padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 12), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))),
                                       child: const Text("Book", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                                     ),
