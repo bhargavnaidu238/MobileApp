@@ -99,7 +99,8 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
   // ---- COUPON ----
 
   Future<void> _applyCoupon() async {
-    final code = couponController.text.trim().toUpperCase();
+    // ✅ Do NOT force uppercase – backend may be case-sensitive
+    final code = couponController.text.trim();
 
     if (code.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -108,6 +109,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
       return;
     }
 
+    // ✅ Ensure userId exists
     final userId = (widget.bookingData['User_ID'] ?? '').toString().trim();
     if (userId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -117,14 +119,21 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
     }
 
     try {
-      final uri = Uri.parse("${ApiConfig.baseUrl}/coupon/validate");
-      debugPrint("📡 POST Coupon -> $uri");
+      final uri = Uri.parse('${ApiConfig.baseUrl}/coupon/validate');
+      debugPrint("🔗 FINAL Coupon URL = $uri");
+      // ✅ Force baseAmount to numeric double (prevents backend mismatch)
+      final double baseAmount =
+      double.parse(_baseTotal.toString());
 
       final body = jsonEncode({
         "userId": userId,
         "couponCode": code,
-        "baseAmount": _baseTotal,
+        "baseAmount": baseAmount,
       });
+
+      debugPrint("📡 POST Coupon -> $uri");
+      debugPrint("📤 Coupon Request Body: $body");
+      debugPrint("💰 Base Amount Type: ${baseAmount.runtimeType}");
 
       final resp = await http
           .post(
@@ -135,54 +144,70 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
           .timeout(const Duration(seconds: 20));
 
       debugPrint("📩 Coupon status: ${resp.statusCode}");
-      debugPrint("📩 Coupon body: ${resp.body}");
+      debugPrint("📩 Coupon raw body: ${resp.body}");
 
       if (resp.statusCode != 200) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text("Failed to validate coupon: ${resp.statusCode}"),
+            content: Text("Failed to validate coupon (${resp.statusCode})"),
           ),
         );
         return;
       }
 
-      final data = jsonDecode(resp.body) as Map<String, dynamic>;
-      final valid = data["valid"] == true;
-      final message = (data["message"] ?? "").toString();
-      final discountAmount =
+      final Map<String, dynamic> data =
+      jsonDecode(resp.body) as Map<String, dynamic>;
+
+      debugPrint("🧾 Parsed Coupon Response: $data");
+
+      // ✅ Defensive parsing – handles bool OR string
+      final bool valid =
+          data["valid"] != null && data["valid"].toString() == "true";
+
+      final String message =
+      (data["message"] ?? "").toString();
+
+      final double discountAmount =
           (data["discountAmount"] as num?)?.toDouble() ?? 0.0;
-      final discountedAmount =
-          (data["discountedAmount"] as num?)?.toDouble() ?? _baseTotal;
-      final title = (data["couponTitle"] ?? code).toString();
+
+      final double discountedAmount =
+          (data["discountedAmount"] as num?)?.toDouble() ?? baseAmount;
+
+      final String title =
+      (data["couponTitle"] ?? code).toString();
+
+      debugPrint("✅ Coupon valid: $valid");
+      debugPrint("🏷️ Coupon title: $title");
+      debugPrint("💸 Discount: $discountAmount");
+      debugPrint("💰 Payable after coupon: $discountedAmount");
 
       if (!valid) {
         setState(() {
           _couponValid = false;
           _couponDiscount = 0.0;
-          _payableAfterCoupon = _baseTotal;
+          _payableAfterCoupon = baseAmount;
           _appliedCouponCode = null;
           _appliedCouponTitle = null;
-          _couponMessage = message;
+          _couponMessage =
+          message.isNotEmpty ? message : "Coupon invalid.";
         });
 
         _recalculateWalletUsage();
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content:
-              Text(message.isEmpty ? "Coupon invalid." : message)),
+          SnackBar(content: Text(_couponMessage!)),
         );
         return;
       }
 
-      // Coupon is valid → Option B: apply coupon first, then wallet
+      // ✅ Coupon valid → apply coupon first, then wallet
       setState(() {
         _couponValid = true;
         _couponDiscount = discountAmount;
         _payableAfterCoupon = discountedAmount;
         _appliedCouponCode = code;
         _appliedCouponTitle = title;
-        _couponMessage = "Hurray $title Applied 🎉";
+        _couponMessage = "$title applied successfully";
       });
 
       _recalculateWalletUsage();
@@ -190,13 +215,16 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(_couponMessage!)),
       );
-    } catch (e) {
+    } catch (e, stack) {
       debugPrint("❌ Coupon error: $e");
+      debugPrint("📉 Stacktrace: $stack");
+
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Error applying coupon: $e")),
+        SnackBar(content: Text("Error applying coupon. Please try again.")),
       );
     }
   }
+
 
   // ---- WALLET LOGIC (Option B + B2) ----
   //

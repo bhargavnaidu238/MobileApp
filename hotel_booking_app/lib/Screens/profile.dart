@@ -608,33 +608,207 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
 }
 
 /* ------------------------- ABOUT US PAGE ------------------------- */
-
 class AboutUsPage extends StatelessWidget {
   const AboutUsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-      AppBar(title: const Text("About Us"), backgroundColor: Colors.purple),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          children: [
-            const Text("About Us",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(
-                  icon: const FaIcon(FontAwesomeIcons.instagram),
-                  onPressed: () {},
-                ),
-              ],
-            )
-          ],
+      appBar: AppBar(
+        title: const Text("About Us"),
+        backgroundColor: const Color(0xFF1B5E20),
+        elevation: 1,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xFFF3F7F4),
+              Color(0xFFE6EFEA),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              /// COMPANY INTRO
+              const Text(
+                "Building Trusted Hotel Experiences",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF1B5E20),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              const Text(
+                "We are a technology-driven hospitality platform dedicated to "
+                    "simplifying hotel discovery, booking, and management for "
+                    "travelers and partners worldwide. Our focus is on reliability, "
+                    "transparency, and long-term value creation for every stakeholder "
+                    "in the travel ecosystem.",
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.8,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 28),
+
+              /// BUSINESS SCALE
+              _sectionTitle("Our Business at a Glance"),
+              const SizedBox(height: 12),
+
+              _infoRow("Partner Hotels", "2,500+ verified properties"),
+              _infoRow("Geographical Reach", "120+ cities across key travel markets"),
+              _infoRow("Customer Base", "1M+ active travelers"),
+              _infoRow("Customer Satisfaction", "4.7/5 average rating"),
+
+              const SizedBox(height: 32),
+
+              /// VALUE PROPOSITION
+              _sectionTitle("What Sets Us Apart"),
+              const SizedBox(height: 12),
+
+              const Text(
+                "• Curated hotel partnerships ensuring consistent quality standards\n"
+                    "• Secure and transparent booking experience\n"
+                    "• Competitive pricing with no hidden charges\n"
+                    "• Dedicated support for both travelers and hotel partners\n"
+                    "• Scalable technology built for long-term growth",
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.8,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 32),
+
+              /// TRUST & REVIEWS
+              _sectionTitle("Trusted by Travelers & Partners"),
+              const SizedBox(height: 12),
+
+              const Text(
+                "Our platform is backed by thousands of verified customer reviews "
+                    "and long-standing partnerships with hotels ranging from boutique "
+                    "stays to large business chains. This trust is earned through "
+                    "consistent delivery, operational excellence, and customer-first "
+                    "decision making.",
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.8,
+                  color: Colors.black87,
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              Divider(color: Colors.grey.shade400),
+
+              const SizedBox(height: 24),
+
+              /// SOCIAL & FOOTER
+              const Center(
+                child: Text(
+                  "Stay Connected",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF1B5E20),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _socialIcon(FontAwesomeIcons.linkedinIn),
+                  _socialIcon(FontAwesomeIcons.instagram),
+                  _socialIcon(FontAwesomeIcons.twitter),
+                  _socialIcon(FontAwesomeIcons.facebookF),
+                ],
+              ),
+
+              const SizedBox(height: 28),
+
+              const Center(
+                child: Text(
+                  "© 2025 Your Company Name Pvt. Ltd.\n"
+                      "All rights reserved. Unauthorized reproduction or distribution "
+                      "is prohibited.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54,
+                    height: 1.6,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// ---------- Helpers ----------
+
+  static Widget _sectionTitle(String title) {
+    return Text(
+      title,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.w600,
+        color: Color(0xFF1B5E20),
+      ),
+    );
+  }
+
+  static Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 160,
+            child: Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(color: Colors.black87),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget _socialIcon(IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: IconButton(
+        icon: FaIcon(icon, size: 18),
+        color: Colors.grey.shade700,
+        onPressed: () {},
       ),
     );
   }
