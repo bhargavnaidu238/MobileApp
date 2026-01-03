@@ -168,7 +168,7 @@ class _BookingPageState extends State<BookingPage> {
   int get daysOfStay {
     if (checkInDate == null || checkOutDate == null) return 0;
     final diff = checkOutDate!.difference(checkInDate!).inDays;
-    return diff >= 0 ? diff + 1 : 0;
+    return diff >= 0 ? diff : 0;
   }
 
   double get roomPricePerDay {
@@ -527,7 +527,7 @@ class _BookingPageState extends State<BookingPage> {
         Expanded(
           child: ElevatedButton.icon(
               icon: const Icon(Icons.payment, color: Colors.white),
-              label: const Text("PAY NOW", style: TextStyle(color: Colors.white)),
+              label: const Text("Proceed to Payment", style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(backgroundColor: primaryGreen, padding: const EdgeInsets.symmetric(vertical: 12)),
               onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => HotelPaymentPage(bookingData: bookingData)))
           ),
@@ -536,7 +536,7 @@ class _BookingPageState extends State<BookingPage> {
         Expanded(
           child: ElevatedButton.icon(
               icon: const Icon(Icons.edit, color: Colors.white),
-              label: const Text("CHANGE", style: TextStyle(color: Colors.white)),
+              label: const Text("Modify", style: TextStyle(color: Colors.white)),
               style: ElevatedButton.styleFrom(backgroundColor: Colors.orange.shade800, padding: const EdgeInsets.symmetric(vertical: 12)),
               onPressed: () => setState(() => showSummary = false)
           ),

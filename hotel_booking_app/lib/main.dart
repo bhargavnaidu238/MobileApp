@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'screens/login_page.dart';
 import 'screens/register_page.dart';
 import 'screens/home_page.dart' as home;
-import 'screens/booking_function.dart'; // This should contain your BookingPage class
+import 'screens/booking_function.dart';
 import 'screens/profile.dart';
 import 'screens/booking_history_page.dart';
 import 'screens/hotels_page.dart';
 import 'screens/paying_guests_page.dart' as pgs;
+
 
 void main() => runApp(MyApp());
 

@@ -48,19 +48,25 @@ class _HomePageState extends State<HomePage> {
     {
       'title': 'Farm Stays',
       'icon': Icons.agriculture,
-      'type': 'Farm Stay',
+      'type': 'Farm House',
       'color': [Color(0xFF1B5E20), Color(0xFF4CAF50)]
     },
     {
       'title': 'Home Stays',
       'icon': Icons.house,
-      'type': 'Home Stay',
+      'type': 'Home Stays',
       'color': [Color(0xFF00695C), Color(0xFF4DB6AC)]
     },
     {
       'title': 'Hotels',
       'icon': Icons.business,
       'type': 'Hotel',
+      'color': [Color(0xFF880E4F), Color(0xFFF06292)]
+    },
+    {
+      'title': 'Lodge',
+      'icon': Icons.hotel,
+      'type': 'Lodge',
       'color': [Color(0xFF880E4F), Color(0xFFF06292)]
     },
     {
@@ -72,7 +78,7 @@ class _HomePageState extends State<HomePage> {
     {
       'title': 'Party Rooms',
       'icon': Icons.nightlife,
-      'type': 'Party Room',
+      'type': 'Party Rooms',
       'color': [Color(0xFFBF360C), Color(0xFFFFA726)]
     },
     {
@@ -86,6 +92,12 @@ class _HomePageState extends State<HomePage> {
       'icon': Icons.house_rounded,
       'type': 'Villa',
       'color': [Color(0xFF6A1B9A), Color(0xFFBA68C8)]
+    },
+    {
+      'title': 'Others',
+      'icon': Icons.business,
+      'type': 'Others',
+      'color': [Color(0xFF880E4F), Color(0xFFF06292)]
     },
   ];
 
