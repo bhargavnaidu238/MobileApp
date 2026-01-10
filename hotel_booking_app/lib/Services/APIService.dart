@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   // Replace with your local backend IP and port
-  static const String baseUrl = 'http://127.0.0.1:8000';
+  static const String baseUrl = 'https://test-host-server-tamg.onrender.com;
 
   // ------------------ User Registration ------------------
   static Future<bool> registerUser({

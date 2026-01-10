@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 class ApiConfig {
   static const String _localWeb = 'http://localhost:8080';
   static const String _localAndroid = 'http://10.0.2.2:8080';
-  static const String _production = 'https://api.yourdomain.com';
+  static const String _production = 'https://test-host-server-tamg.onrender.com';
 
   /// 🔐 Razorpay Key IDs (SAFE TO KEEP IN FRONTEND)
   static const String _razorpayTestKey = 'rzp_test_RyBLHvNxl52vtv';
