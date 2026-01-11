@@ -5,38 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b3cc85d8-4294-490f-9bd6-972737d6cf1d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/deviceManager.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/migrations.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules/My_Application.iml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/Services/APIService.dart" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/lib/Services/APIService.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/Services/api_service.dart" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/lib/Services/api_service.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/Add_Hotels_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/Add_PGs_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/Domain_Landing_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/View_Bookings_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/View_Hotels_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/View_PGs_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/Web_Finance_Page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/about_us_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/hotel_images.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/web_dashboard_page.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/web_login.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/web_profile.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal/web_screens/web_register.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/partner_portal_main.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/linux/flutter/generated_plugins.cmake" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugin_registrant.h" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugin_registrant.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/windows/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/Screens/home_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/lib/Screens/home_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hotel_booking_app/lib/Screens/profile.dart" beforeDir="false" afterPath="$PROJECT_DIR$/hotel_booking_app/lib/Screens/profile.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

@@ -384,7 +384,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Brand Name", style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text("Flamingo AI", style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
         backgroundColor: Colors.green[700],
         leading: IconButton(

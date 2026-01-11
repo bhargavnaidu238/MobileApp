@@ -268,14 +268,13 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
 
   final TextEditingController currentPasswordController =
   TextEditingController();
-  final TextEditingController newPasswordController =
-  TextEditingController();
+  final TextEditingController newPasswordController = TextEditingController();
 
-  bool isEditing = false,
-      isLoading = false,
-      isFetching = true,
-      isDeleting = false,
-      isChangingPassword = false;
+  bool isEditing = false;
+  bool isLoading = false;
+  bool isFetching = true;
+  bool isDeleting = false;
+  bool isChangingPassword = false;
 
   @override
   void initState() {
@@ -317,6 +316,40 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     }
   }
 
+  /* ================= UPDATE PROFILE ================= */
+
+  Future<void> updateProfile() async {
+    final mobile = phoneController.text.trim();
+    final formattedPhone = "${countryCodeController.text}-$mobile";
+
+    if (!RegExp(r'^[0-9]{10}$').hasMatch(mobile)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Phone number must be exactly 10 digits")),
+      );
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    final success = await ProfileApiService.updateProfile(
+      email: widget.email,
+      userId: widget.userId,
+      firstName: capitalize(firstNameController.text),
+      lastName: capitalize(lastNameController.text),
+      phone: formattedPhone,
+      address: addressController.text,
+    );
+
+    setState(() {
+      isLoading = false;
+      if (success) isEditing = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(success ? "Profile Updated" : "Update Failed")),
+    );
+  }
+
   /* ================= CHANGE PASSWORD ================= */
 
   void openChangePasswordDialog() {
@@ -351,9 +384,8 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         ),
         actions: [
           TextButton(
-            onPressed: isChangingPassword
-                ? null
-                : () => Navigator.pop(context),
+            onPressed:
+            isChangingPassword ? null : () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
           ElevatedButton(
@@ -405,57 +437,7 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
     );
   }
 
-  /* ================= EXISTING METHODS (UNCHANGED) ================= */
-
-  Future<void> updateProfile() async {
-    final mobile = phoneController.text.trim();
-    final formattedPhone = "${countryCodeController.text}-$mobile";
-
-    if (!RegExp(r'^[0-9]{10}$').hasMatch(mobile)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Phone number must be exactly 10 digits")),
-      );
-      return;
-    }
-
-    setState(() => isLoading = true);
-
-    final success = await ProfileApiService.updateProfile(
-      email: widget.email,
-      userId: widget.userId,
-      firstName: capitalize(firstNameController.text),
-      lastName: capitalize(lastNameController.text),
-      phone: formattedPhone,
-      address: addressController.text,
-    );
-
-    setState(() {
-      isLoading = false;
-      isEditing = !success;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(success ? "Profile Updated" : "Update Failed")),
-    );
-  }
-
-  Future<void> deleteAccount() async {
-    setState(() => isDeleting = true);
-
-    final success = await ProfileApiService.deactivateAccount(
-      email: widget.email,
-      userId: widget.userId,
-      status: "Inactive",
-    );
-
-    setState(() => isDeleting = false);
-
-    if (success && mounted) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Account Deleted")));
-      Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
-    }
-  }
+  /* ================= DELETE ACCOUNT ================= */
 
   void confirmDelete() {
     showDialog(
@@ -479,6 +461,24 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
         ],
       ),
     );
+  }
+
+  Future<void> deleteAccount() async {
+    setState(() => isDeleting = true);
+
+    final success = await ProfileApiService.deactivateAccount(
+      email: widget.email,
+      userId: widget.userId,
+      status: "Inactive",
+    );
+
+    setState(() => isDeleting = false);
+
+    if (success && mounted) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text("Account Deleted")));
+      Navigator.pushNamedAndRemoveUntil(context, '/', (_) => false);
+    }
   }
 
   /* ================= UI ================= */
@@ -528,29 +528,48 @@ class _ProfileDetailsPageState extends State<ProfileDetailsPage> {
               ),
             ),
 
-            /// 🔐 CHANGE PASSWORD BUTTON
-            ElevatedButton(
-              onPressed: openChangePasswordDialog,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                minimumSize: const Size(double.infinity, 45),
+            /// 💾 SAVE CHANGES (ONLY IN EDIT MODE)
+            if (isEditing)
+              ElevatedButton(
+                onPressed: isLoading ? null : updateProfile,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  minimumSize: const Size(double.infinity, 45),
+                ),
+                child: isLoading
+                    ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white),
+                )
+                    : const Text("Save Changes"),
               ),
-              child: const Text("Change Password"),
-            ),
 
-            const SizedBox(height: 10),
-
-            TextButton.icon(
-              onPressed: isDeleting ? null : confirmDelete,
-              icon: isDeleting
-                  ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2))
-                  : const Icon(Icons.delete, color: Colors.red),
-              label: const Text("Delete Account",
-                  style: TextStyle(color: Colors.red)),
-            ),
+            /// 🔐 CHANGE PASSWORD (HIDDEN DURING EDIT)
+            if (!isEditing) ...[
+              ElevatedButton(
+                onPressed: openChangePasswordDialog,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  minimumSize: const Size(double.infinity, 45),
+                ),
+                child: const Text("Change Password"),
+              ),
+              const SizedBox(height: 10),
+              TextButton.icon(
+                onPressed: isDeleting ? null : confirmDelete,
+                icon: isDeleting
+                    ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child:
+                    CircularProgressIndicator(strokeWidth: 2))
+                    : const Icon(Icons.delete, color: Colors.red),
+                label: const Text("Delete Account",
+                    style: TextStyle(color: Colors.red)),
+              ),
+            ],
           ],
         ),
       ),
