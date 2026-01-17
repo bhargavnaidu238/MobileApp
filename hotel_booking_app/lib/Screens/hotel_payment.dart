@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:hotel_booking_app/services/api_service.dart';
+import 'package:hotel_booking_app/services/api_service.dart'; // Ensure ApiConfig.baseUrl is your Render URL
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class HotelPaymentPage extends StatefulWidget {
@@ -56,7 +56,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
   }
 
   void _initPricesFromBooking() {
-    final rawTotal = widget.bookingData['Total_Price'];
+    final rawTotal = widget.bookingData['total_price']; // Updated column key
     double parsed = 0.0;
     if (rawTotal is num) {
       parsed = rawTotal.toDouble();
@@ -98,7 +98,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
         body: jsonEncode({
           "amount": (_finalPayable * 100).toInt(),
           "currency": "INR",
-          "userId": widget.bookingData['User_ID'],
+          "userId": widget.bookingData['user_id'], // Updated column key
         }),
       );
 
@@ -109,10 +109,10 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
           'amount': (_finalPayable * 100).toInt(),
           'name': 'Hotel Booking',
           'order_id': data['order_id'],
-          'description': widget.bookingData['Hotel_Name'],
+          'description': widget.bookingData['hotel_name'], // Updated column key
           'prefill': {
-            'contact': widget.bookingData['User_Phone'] ?? '',
-            'email': widget.bookingData['Email'] ?? ''
+            'contact': widget.bookingData['user_phone'] ?? '', // Updated column key
+            'email': widget.bookingData['email'] ?? '' // Updated column key
           },
         };
         _razorpay.open(options);
@@ -130,7 +130,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
   // ---- WALLET & COUPON LOGIC ----
 
   Future<void> _fetchWalletFromDb() async {
-    final userId = (widget.bookingData['User_ID'] ?? '').toString().trim();
+    final userId = (widget.bookingData['user_id'] ?? '').toString().trim(); // Updated column key
     if (userId.isEmpty) return;
     try {
       final uri = Uri.parse("${ApiConfig.baseUrl}/wallet?userId=${Uri.encodeComponent(userId)}");
@@ -164,7 +164,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
 
   Future<void> _applyCoupon() async {
     final code = couponController.text.trim();
-    final userId = (widget.bookingData['User_ID'] ?? '').toString().trim();
+    final userId = (widget.bookingData['user_id'] ?? '').toString().trim(); // Updated column key
     if (code.isEmpty || userId.isEmpty) return;
     try {
       final uri = Uri.parse('${ApiConfig.baseUrl}/coupon/validate');
@@ -198,43 +198,34 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
     final bool isPayAtHotel = (paymentType == "Pay at Hotel");
 
     if (isPayAtHotel) {
-      booking["Amount_Paid_Online"] = 0;
-      booking["Due_Amount_At_Hotel"] = _finalPayable;
-
-      // FIX 1: Explicitly set Payment_Method_Type to Offline
-      booking["Payment_Method_Type"] = "Offline";
-      booking["Payment_Type"] = "Offline";
-
-      booking["Paid_Via"] = "NA";
-
-      // FIX 2: Explicitly set Transaction_ID to NA so Backend doesn't auto-generate one
-      booking["Transaction_ID"] = "NA";
-
-      booking["Payment_Status"] = "Pending";
-      booking["Final_Payable_Amount"] = _finalPayable;
-
-      // Reset Wallet/Coupon for Offline
-      booking["Wallet_Used"] = "No";
-      booking["Wallet_Amount"] = 0;
-      booking["Coupon_Code"] = "";
-      booking["Coupon_Discount_Amount"] = 0;
+      booking["amount_paid_online"] = 0;
+      booking["due_amount_at_hotel"] = _finalPayable;
+      booking["payment_method_type"] = "Offline";
+      booking["payment_type"] = "Offline";
+      booking["paid_via"] = "NA";
+      booking["transaction_id"] = "NA";
+      booking["payment_status"] = "Pending";
+      booking["final_payable_amount"] = _finalPayable;
+      booking["wallet_used"] = "No";
+      booking["wallet_amount"] = 0;
+      booking["coupon_code"] = "";
+      booking["coupon_discount_amount"] = 0;
     } else {
-      booking["Amount_Paid_Online"] = _finalPayable;
-      booking["Due_Amount_At_Hotel"] = 0;
-      booking["Payment_Method_Type"] = "Online";
-      booking["Payment_Type"] = "Online";
-      booking["Paid_Via"] = "Razorpay";
-      booking["Transaction_ID"] = gatePaymentId ?? "";
-      booking["Payment_Status"] = "Paid";
-      booking["Final_Payable_Amount"] = _finalPayable;
-
-      booking["Wallet_Used"] = useWallet ? "Yes" : "No";
-      booking["Wallet_Amount"] = _walletUsed;
-      booking["Coupon_Code"] = _appliedCouponCode ?? "";
-      booking["Coupon_Discount_Amount"] = _couponDiscount;
+      booking["amount_paid_online"] = _finalPayable;
+      booking["due_amount_at_hotel"] = 0;
+      booking["payment_method_type"] = "Online";
+      booking["payment_type"] = "Online";
+      booking["paid_via"] = "Razorpay";
+      booking["transaction_id"] = gatePaymentId ?? "";
+      booking["payment_status"] = "Paid";
+      booking["final_payable_amount"] = _finalPayable;
+      booking["wallet_used"] = useWallet ? "Yes" : "No";
+      booking["wallet_amount"] = _walletUsed;
+      booking["coupon_code"] = _appliedCouponCode ?? "";
+      booking["coupon_discount_amount"] = _couponDiscount;
     }
 
-    booking["Total_Price"] = _baseTotal;
+    booking["total_price"] = _baseTotal;
 
     try {
       final uri = Uri.parse('${ApiConfig.baseUrl}/booking');
@@ -254,14 +245,14 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
             verifyUri,
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({
-              "Booking_ID": assignedBookingId,
-              "User_ID": booking["User_ID"],
-              "Partner_ID": booking["Partner_ID"],
-              "Hotel_ID": booking["Hotel_ID"],
-              "Gateway_Order_ID": gateOrderId,
-              "Gateway_Payment_ID": gatePaymentId,
-              "Gateway_Signature": gateSignature,
-              "Final_Payable_Amount": _finalPayable,
+              "booking_id": assignedBookingId,
+              "user_id": booking["user_id"],
+              "partner_id": booking["partner_id"],
+              "hotel_id": booking["hotel_id"],
+              "gateway_order_id": gateOrderId,
+              "gateway_payment_id": gatePaymentId,
+              "gateway_signature": gateSignature,
+              "final_payable_amount": _finalPayable,
             }),
           );
         }
@@ -270,7 +261,7 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
         Navigator.pushReplacementNamed(
           context,
           '/history',
-          arguments: {'email': booking['Email'], 'userId': booking['User_ID']},
+          arguments: {'email': booking['email'], 'userId': booking['user_id']},
         );
       } else {
         throw "Save Failed";
@@ -293,12 +284,12 @@ class _HotelPaymentPageState extends State<HotelPaymentPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(booking['Hotel_Name'] ?? 'Hotel', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+          Text(booking['hotel_name'] ?? 'Hotel', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
           const Divider(color: Colors.white54, height: 18),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _infoItem(Icons.king_bed, "Room", booking['Room_Type'] ?? 'Standard', Colors.white),
+              _infoItem(Icons.king_bed, "Room", booking['room_type'] ?? 'Standard', Colors.white),
               _infoItem(Icons.attach_money, "Base Price", "₹${_baseTotal.toStringAsFixed(2)}", Colors.white),
             ],
           ),
