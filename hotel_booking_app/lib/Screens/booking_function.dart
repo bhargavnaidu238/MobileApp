@@ -57,9 +57,9 @@ class _BookingPageState extends State<BookingPage> {
 
   bool get isPgMode {
     if (hotel['is_hotel'] == true) return false;
-    if (hotel.containsKey('PG_ID') || hotel.containsKey('PG_Name')) return true;
-    if ((hotel['Hotel_Name'] ?? '').toString().trim().isEmpty &&
-        (hotel['PG_Name'] ?? '').toString().trim().isNotEmpty) {
+    if (hotel.containsKey('pg_id') || hotel.containsKey('pg_name')) return true;
+    if ((hotel['hotel_name'] ?? '').toString().trim().isEmpty &&
+        (hotel['pg_name'] ?? '').toString().trim().isNotEmpty) {
       return true;
     }
     return false;
@@ -69,7 +69,7 @@ class _BookingPageState extends State<BookingPage> {
     if (hotel['Available_Rooms_Map'] != null && hotel['Available_Rooms_Map'] is Map) {
       return Map<String, dynamic>.from(hotel['Available_Rooms_Map']);
     }
-    final rawData = hotel['Room_Price'] ?? hotel['Room_Prices'] ?? hotel['room_price'];
+    final rawData = hotel['room_price'] ?? hotel['room_prices'] ?? hotel['room_price'];
     if (rawData is Map) return Map<String, dynamic>.from(rawData);
     if (rawData is String && rawData.isNotEmpty) {
       Map<String, dynamic> parsed = {};
@@ -95,26 +95,26 @@ class _BookingPageState extends State<BookingPage> {
     hotel = Map<String, dynamic>.from(widget.hotel);
     user = Map<String, dynamic>.from(widget.user);
 
-    final initName = (user['Guest_Name'] ?? user['name'] ?? "${(user['firstName'] ?? '')} ${(user['lastName'] ?? '')}".trim() ?? user['username'] ?? "").toString();
-    final initEmail = (user['Email'] ?? user['email'] ?? user['mail'] ?? "").toString();
-    final initPhone = (user['Mobile'] ?? user['mobile'] ?? user['phone'] ?? "").toString();
+    final initName = (user['guest_name'] ?? user['name'] ?? "${(user['firstName'] ?? '')} ${(user['lastName'] ?? '')}".trim() ?? user['username'] ?? "").toString();
+    final initEmail = (user['email'] ?? user['email'] ?? user['mail'] ?? "").toString();
+    final initPhone = (user['mobile'] ?? user['mobile'] ?? user['phone'] ?? "").toString();
 
     nameController = TextEditingController(text: initName);
     emailController = TextEditingController(text: initEmail);
     phoneController = TextEditingController(text: initPhone);
 
-    if (user['Check_In_Date'] != null) {
+    if (user['check_in_date'] != null) {
       try {
-        List<String> d = user['Check_In_Date'].toString().split('-');
+        List<String> d = user['check_in_date'].toString().split('-');
         checkInDate = DateTime(int.parse(d[2]), int.parse(d[1]), int.parse(d[0]));
       } catch (e) { checkInDate = DateTime.now(); }
     } else {
       checkInDate = DateTime.now();
     }
 
-    if (user['Check_Out_Date'] != null) {
+    if (user['check_out_date'] != null) {
       try {
-        List<String> d = user['Check_Out_Date'].toString().split('-');
+        List<String> d = user['check_out_date'].toString().split('-');
         checkOutDate = DateTime(int.parse(d[2]), int.parse(d[1]), int.parse(d[0]));
       } catch (e) { checkOutDate = DateTime.now().add(const Duration(days: 1)); }
     } else if (!isPgMode) {
@@ -122,11 +122,11 @@ class _BookingPageState extends State<BookingPage> {
     }
 
     if (isPgMode) {
-      persons = int.tryParse(user['Persons']?.toString() ?? hotel['Persons']?.toString() ?? '1') ?? 1;
-      months = int.tryParse(user['Months']?.toString() ?? hotel['Months']?.toString() ?? '1') ?? 1;
+      persons = int.tryParse(user['persons']?.toString() ?? hotel['persons']?.toString() ?? '1') ?? 1;
+      months = int.tryParse(user['months']?.toString() ?? hotel['months']?.toString() ?? '1') ?? 1;
     } else {
-      rooms = int.tryParse(user['Total_Rooms_Booked']?.toString() ?? '1') ?? 1;
-      adults = int.tryParse(user['Adults']?.toString() ?? '1') ?? 1;
+      rooms = int.tryParse(user['total_rooms_booked']?.toString() ?? '1') ?? 1;
+      adults = int.tryParse(user['adults']?.toString() ?? '1') ?? 1;
     }
 
     if (phoneController.text.trim().isEmpty && emailController.text.trim().isNotEmpty) {
@@ -143,22 +143,22 @@ class _BookingPageState extends State<BookingPage> {
     super.dispose();
   }
 
-  String get hotelName => (hotel['Hotel_Name'] ?? hotel['HotelName'] ?? hotel['Name'] ?? hotel['PG_Name'] ?? '').toString();
+  String get hotelName => (hotel['hotel_name'] ?? hotel['hotelname'] ?? hotel['name'] ?? hotel['pg_name'] ?? '').toString();
   String get hotelAddress {
-    final address = hotel['Address'] ?? hotel['Hotel_Address'] ?? hotel['Hotel_Location'] ?? hotel['PG_Location'] ?? '';
-    final city = hotel['City'] ?? '';
-    final state = hotel['State'] ?? '';
-    final country = hotel['Country'] ?? '';
-    final pincode = hotel['Pincode'] ?? '';
+    final address = hotel['address'] ?? hotel['hotel_address'] ?? hotel['hotel_location'] ?? hotel['pg_location'] ?? '';
+    final city = hotel['city'] ?? '';
+    final state = hotel['state'] ?? '';
+    final country = hotel['country'] ?? '';
+    final pincode = hotel['pincode'] ?? '';
     final parts = [address, city, state, country, pincode].where((e) => e != null && e.toString().trim().isNotEmpty).map((e) => e.toString().trim()).toList();
     return parts.isEmpty ? '' : parts.join(', ');
   }
-  String get hotelContact => (hotel['Hotel_Contact'] ?? hotel['Contact'] ?? hotel['Phone'] ?? hotel['PG_Contact'] ?? '').toString();
-  String get hotelAmenities => (hotel['Amenities'] ?? hotel['Hotel_Amenities'] ?? '').toString();
-  String get hotelRating => (hotel['Rating'] ?? '').toString();
+  String get hotelContact => (hotel['hotel_contact'] ?? hotel['contact'] ?? hotel['phone'] ?? hotel['pg_contact'] ?? '').toString();
+  String get hotelAmenities => (hotel['amenities'] ?? hotel['hotel_amenities'] ?? '').toString();
+  String get hotelRating => (hotel['rating'] ?? '').toString();
 
   bool get customizationAllowed {
-    final v = hotel['Customization'] ?? hotel['Customization_Allowed'] ?? hotel['customization'] ?? hotel['customization_allowed'];
+    final v = hotel['customization'] ?? hotel['customization_allowed'] ?? hotel['customization'] ?? hotel['customization_allowed'];
     if (v == null) return false;
     if (v is bool) return v;
     final s = v.toString().toLowerCase().trim();
@@ -172,7 +172,7 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   double get roomPricePerDay {
-    final rp = hotel['Selected_Room_Price'] ?? hotel['Room_Price'] ?? hotel['room_price'] ?? hotel['RoomPrice'] ?? hotel['Price'] ?? '';
+    final rp = hotel['selected_room_price'] ?? hotel['room_price'] ?? hotel['room_price'] ?? hotel['roomprice'] ?? hotel['price'] ?? '';
     final s = rp?.toString() ?? '';
     if (s.isEmpty) return 0.0;
     final first = s.split(',').first.trim();
@@ -197,10 +197,10 @@ class _BookingPageState extends State<BookingPage> {
   double get allDayPrice => totalRoomPricePerDay * (daysOfStay > 0 ? daysOfStay : 1);
 
   double get pgMonthlyPrice {
-    final selPrice = hotel['Selected_Room_Price'] ?? hotel['selected_room_price'];
+    final selPrice = hotel['selected_room_price'] ?? hotel['selected_room_price'];
     if (selPrice != null) return double.tryParse(selPrice.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
     if (availableRoomsMap.isEmpty) return 0.0;
-    final key = (hotel['Selected_Room_Type'] ?? selectedRoomType ?? '').toString();
+    final key = (hotel['selected_room_type'] ?? selectedRoomType ?? '').toString();
     if (key.isNotEmpty && availableRoomsMap.containsKey(key)) return double.tryParse(availableRoomsMap[key].toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
     return double.tryParse(availableRoomsMap.values.first.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
   }
@@ -217,7 +217,6 @@ class _BookingPageState extends State<BookingPage> {
         rooms = calculatedRooms;
       }
     }
-    // Clean up extra room selections if rooms count is reduced
     int maxAllowed = rooms - 1;
     int current = selectedExtraRooms.values.where((v) => v == true).length;
     if (current > maxAllowed) {
@@ -270,8 +269,7 @@ class _BookingPageState extends State<BookingPage> {
 
   @override
   Widget build(BuildContext context) {
-    final displayHotelName =
-    yhotelName.isNotEmpty ? hotelName : (isPgMode ? 'Paying Guest' : 'Hotel');
+    final displayHotelName = hotelName.isNotEmpty ? hotelName : (isPgMode ? 'Paying Guest' : 'Hotel');
     return Scaffold(
       backgroundColor: scaffoldBg,
       appBar: AppBar(title: Text("Booking - $displayHotelName"), backgroundColor: primaryGreen, elevation: 0),
@@ -351,10 +349,10 @@ class _BookingPageState extends State<BookingPage> {
         if (!isPgMode && rooms > 1 && availableRoomsMap.isNotEmpty) ...[
           _buildSectionHeader("SELECT EXTRA ROOM TYPES"),
           _buildDesignCard(children: [
-            Text("Default Selection: 1x ${hotel['Selected_Room_Type']}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey)),
+            Text("Default Selection: 1x ${hotel['selected_room_type']}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey)),
             Text("Remaining selection count: ${maxExtraSelectable - currentSelectedCount}", style: const TextStyle(fontSize: 12, color: Colors.orange)),
             const Divider(),
-            ...availableRoomsMap.entries.where((e) => e.key != hotel['Selected_Room_Type']).map((entry) {
+            ...availableRoomsMap.entries.where((e) => e.key != hotel['selected_room_type']).map((entry) {
               bool isChecked = selectedExtraRooms[entry.key.toString()] ?? false;
               bool canSelectMore = currentSelectedCount < maxExtraSelectable;
               return CheckboxListTile(
@@ -365,7 +363,7 @@ class _BookingPageState extends State<BookingPage> {
                 value: isChecked,
                 onChanged: (canSelectMore || isChecked)
                     ? (bool? val) => setState(() => selectedExtraRooms[entry.key.toString()] = val ?? false)
-                    : null, // Strictly disables if count is reached
+                    : null,
               );
             }).toList(),
           ]),
@@ -419,69 +417,66 @@ class _BookingPageState extends State<BookingPage> {
     final name = nameController.text.trim();
     final email = emailController.text.trim();
     final phone = phoneController.text.trim();
-    final partnerId = hotel['Partner_ID'] ?? hotel['partner_id'] ?? '';
-    final hotelId = hotel['Hotel_ID'] ?? hotel['hotel_id'] ?? hotel['PG_ID'] ?? hotel['pg_id'] ?? '';
+    final partnerId = hotel['partner_id'] ?? hotel['partner_id'] ?? '';
+    final hotelId = hotel['hotel_id'] ?? hotel['hotel_id'] ?? hotel['PG_ID'] ?? hotel['pg_id'] ?? '';
     String extraRoomsStr = selectedExtraRooms.entries.where((e) => e.value).map((e) => e.key).join(", ");
 
-    // Formatting Room Type String for DB
-    String mainRoom = (hotel['Selected_Room_Type'] ?? "").toString();
+    String mainRoom = (hotel['selected_room_type'] ?? "").toString();
     List<String> extras = selectedExtraRooms.entries.where((e) => e.value).map((e) => e.key).toList();
     int baseCount = (rooms - extras.length) > 0 ? (rooms - extras.length) : 1;
-    String finalRoomDesc = "$mainRoom (x$baseCount)";
-    if (extras.isNotEmpty) {
-      finalRoomDesc += ", " + extras.map((e) => "$e (x1)").join(", ");
-    }
 
     Map<String, dynamic> bookingData = {
-      "Partner_ID": partnerId,
-      "Hotel_ID": hotelId,
-      "Hotel_Name": hotelName,
-      "Guest_Name": name,
-      "Email": email,
-      "User_ID": widget.userId.isNotEmpty ? widget.userId : (user['User_ID'] ?? user['userId'] ?? ""),
-      "Mobile": phone,
-      "Payment_Type": "Online",
-      "Paid_Via": "Wallet/Online",
-      "Payment_Status": "Pending",
-      "Hotel_Address": hotelAddress,
-      "Hotel_Contact": hotelContact,
-      "Total_Price": totalAmount.toStringAsFixed(2),
-      "Final_Payable_Amount": totalAmount.toStringAsFixed(2),
-      "Original_Total_Price": totalAmount.toStringAsFixed(2),
-      "Amount_Paid_Online": totalAmount.toStringAsFixed(2),
-      "Due_Amount_At_Hotel": "0.0",
-      "Wallet_Amount": "0.0",
-      "Wallet_Used": "No",
-      "Coupon_Discount_Amount": "0.0",
-      "Coupon_Code": "",
-      "GST": gst.toStringAsFixed(2),
+      "partner_id": partnerId,
+      "hotel_id": hotelId,
+      "hotel_name": hotelName,
+      "guest_name": name,
+      "email": email,
+      "user_id": widget.userId.isNotEmpty ? widget.userId : (user['User_ID'] ?? user['userId'] ?? ""),
+      "mobile": phone,
+      "payment_type": "Online",
+      "paid_via": "Wallet/Online",
+      "payment_status": "Pending",
+      "booking_status": "PENDING", // FIX: Initialized status to match SQL CHECK constraint
+      "hotel_address": hotelAddress,
+      "hotel_contact": hotelContact,
+      "total_price": totalAmount.toStringAsFixed(2),
+      "final_payable_amount": totalAmount.toStringAsFixed(2),
+      "original_total_price": totalAmount.toStringAsFixed(2),
+      "amount_paid_online": totalAmount.toStringAsFixed(2),
+      "due_amount_at_hotel": "0.0",
+      "wallet_amount": "0.0",
+      "wallet_used": "No",
+      "coupon_discount_amount": "0.0",
+      "coupon_code": "",
+      "gst": gst.toStringAsFixed(2),
+      "last_payment_record_id": "", // Placeholder to be updated after transaction creation
     };
 
     if (!isPgMode) {
       bookingData.addAll({
-        "Hotel_Type": hotel['Hotel_Type'] ?? "Hotel",
-        "Check_In_Date": "${checkInDate!.day}-${checkInDate!.month}-${checkInDate!.year}",
-        "Check_Out_Date": "${checkOutDate!.day}-${checkOutDate!.month}-${checkOutDate!.year}",
-        "Guest_Count": (adults + children).toString(),
-        "Adults": adults,
-        "Children": children,
-        "Total_Rooms_Booked": rooms,
-        "Total_Days_at_Stay": daysOfStay,
-        "Room_Price_Per_Day": totalRoomPricePerDay.toStringAsFixed(2),
-        "All_Days_Price": allDayPrice.toStringAsFixed(2),
-        "Room_Type": mainRoom + (extraRoomsStr.isNotEmpty ? ", $extraRoomsStr" : ""),
+        "hotel_type": hotel['hotel_type'] ?? "Hotel",
+        "check_in_date": "${checkInDate!.day}-${checkInDate!.month}-${checkInDate!.year}",
+        "check_out_date": "${checkOutDate!.day}-${checkOutDate!.month}-${checkOutDate!.year}",
+        "guest_count": (adults + children).toString(),
+        "adults": adults,
+        "children": children,
+        "total_rooms_booked": rooms,
+        "total_days_at_stay": daysOfStay,
+        "room_price_per_day": totalRoomPricePerDay.toStringAsFixed(2),
+        "all_days_price": allDayPrice.toStringAsFixed(2),
+        "room_type": mainRoom + (extraRoomsStr.isNotEmpty ? ", $extraRoomsStr" : ""),
       });
     } else {
       bookingData.addAll({
-        "Selected_Room_Type": mainRoom,
-        "Selected_Room_Price": (hotel['Selected_Room_Price'] ?? "0").toString(),
-        "Room_Price_Per_Month": pgMonthlyPrice.toStringAsFixed(2),
-        "All_Months_Price": pgTotalForMonths.toStringAsFixed(2),
-        "Monthly_Price": pgMonthlyPrice.toStringAsFixed(2),
-        "Persons": persons,
-        "Months": months,
-        "Check_In_Date": "${checkInDate!.day}-${checkInDate!.month}-${checkInDate!.year}",
-        "Check_Out_Date": checkOutDate == null ? "" : "${checkOutDate!.day}-${checkOutDate!.month}-${checkOutDate!.year}",
+        "selected_room_type": mainRoom,
+        "selected_room_price": (hotel['selected_room_price'] ?? "0").toString(),
+        "room_price_per_month": pgMonthlyPrice.toStringAsFixed(2),
+        "all_months_price": pgTotalForMonths.toStringAsFixed(2),
+        "monthly_price": pgMonthlyPrice.toStringAsFixed(2),
+        "persons": persons,
+        "months": months,
+        "check_in_date": "${checkInDate!.day}-${checkInDate!.month}-${checkInDate!.year}",
+        "check_out_date": checkOutDate == null ? "" : "${checkOutDate!.day}-${checkOutDate!.month}-${checkOutDate!.year}",
       });
     }
 
@@ -493,14 +488,14 @@ class _BookingPageState extends State<BookingPage> {
         _summaryRow("Email", email),
         _summaryRow("Mobile", phone),
         if (!isPgMode) ...[
-          _summaryRow("Check-In Date", bookingData["Check_In_Date"]),
-          _summaryRow("Check-Out Date", bookingData["Check_Out_Date"]),
+          _summaryRow("Check-In Date", bookingData["check_in_date"]),
+          _summaryRow("Check-Out Date", bookingData["check_out_date"]),
           _summaryRow("Days of Stay", "$daysOfStay"),
           _summaryRow("Rooms", "$rooms"),
           _summaryRow("Room Type", mainRoom),
           if (extraRoomsStr.isNotEmpty) _summaryRow("Extra Rooms", extraRoomsStr),
         ] else ...[
-          _summaryRow("Room Type", (hotel['Selected_Room_Type'] ?? "").toString()),
+          _summaryRow("Room Type", (hotel['selected_room_type'] ?? "").toString()),
           _summaryRow("Persons", "$persons"),
           _summaryRow("Months", "$months"),
         ],
