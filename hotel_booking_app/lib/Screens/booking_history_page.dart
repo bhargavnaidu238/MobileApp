@@ -54,9 +54,9 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
 
         final filtered = decoded.where((e) {
           if (e is Map<String, dynamic>) {
-            return e.containsKey('Hotel_Name') &&
-                e.containsKey('Check_In_Date') &&
-                e.containsKey('Check_Out_Date');
+            return e.containsKey('hotel_name') &&
+                e.containsKey('check_in_date') &&
+                e.containsKey('check_out_date');
           }
           return false;
         }).toList();
@@ -66,8 +66,8 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
 
         // Optional: sort on client for nice ordering
         mapped.sort((a, b) {
-          final da = a['Check_In_Date']?.toString() ?? '';
-          final db = b['Check_In_Date']?.toString() ?? '';
+          final da = a['check_in_date']?.toString() ?? '';
+          final db = b['check_in_date']?.toString() ?? '';
           // For upcoming: earliest first, for past: latest first
           return showUpcoming ? da.compareTo(db) : db.compareTo(da);
         });
@@ -118,7 +118,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
   }
 
   Future<void> _onCancelBooking(Map<String, dynamic> booking) async {
-    final bookingStatus = (booking['Booking_Status'] ?? '').toString();
+    final bookingStatus = (booking['booking_status'] ?? '').toString();
     if (!_canModifyOrCancelStatus(bookingStatus)) {
       _showInfoDialog(
         title: 'Action Not Allowed',
@@ -150,7 +150,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
 
     if (confirm != true) return;
 
-    final bookingId = booking['Booking_ID']?.toString() ?? '';
+    final bookingId = booking['booking_id']?.toString() ?? '';
 
     if (bookingId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -166,9 +166,9 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
         uri,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
-          'Booking_ID': bookingId,
-          'User_ID': widget.userId,
-          'Email': widget.email,
+          'booking_id': bookingId,
+          'user_id': widget.userId,
+          'email': widget.email,
         }),
       );
 
@@ -202,7 +202,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
   }
 
   void _navigateToModifyBooking(Map<String, dynamic> booking) async {
-    final bookingStatus = (booking['Booking_Status'] ?? '').toString();
+    final bookingStatus = (booking['booking_status'] ?? '').toString();
     if (!_canModifyOrCancelStatus(bookingStatus)) {
       _showInfoDialog(
         title: 'Action Not Allowed',
@@ -212,7 +212,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
       return;
     }
 
-    final bookingId = booking['Booking_ID']?.toString() ?? '';
+    final bookingId = booking['booking_id']?.toString() ?? '';
 
     if (bookingId.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -278,7 +278,7 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
   }
 
   void _showBookingActions(Map<String, dynamic> booking) {
-    final bookingStatus = (booking['Booking_Status'] ?? '').toString();
+    final bookingStatus = (booking['booking_status'] ?? '').toString();
     final canAct = _canModifyOrCancelStatus(bookingStatus);
 
     if (!canAct) {
@@ -353,30 +353,30 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
   }
 
   Widget buildBookingCard(Map<String, dynamic> booking, int index) {
-    final bookingId = booking['Booking_ID']?.toString() ?? 'N/A';
-    final hotelName = booking['Hotel_Name']?.toString() ?? 'Unknown Hotel';
-    final checkIn = booking['Check_In_Date']?.toString() ?? 'N/A';
-    final checkOut = booking['Check_Out_Date']?.toString() ?? 'N/A';
+    final bookingId = booking['booking_id']?.toString() ?? 'N/A';
+    final hotelName = booking['hotel_name']?.toString() ?? 'Unknown Hotel';
+    final checkIn = booking['check_in_date']?.toString() ?? 'N/A';
+    final checkOut = booking['check_out_date']?.toString() ?? 'N/A';
 
-    final roomType = booking['Room_Type']?.toString() ??
-        booking['Hotel_Type']?.toString() ??
+    final roomType = booking['room_type']?.toString() ??
+        booking['hotel_type']?.toString() ??
         'Standard';
 
-    final contact = booking['Hotel_Contact']?.toString() ?? 'N/A';
+    final contact = booking['hotel_contact']?.toString() ?? 'N/A';
     final address =
-        booking['Hotel_Address']?.toString() ?? 'Address not available';
+        booking['hotel_address']?.toString() ?? 'Address not available';
 
-    final bookingStatus = booking['Booking_Status']?.toString() ?? 'N/A';
+    final bookingStatus = booking['booking_status']?.toString() ?? 'N/A';
 
-    final totalDays = booking['Total_Days_at_Stay']?.toString() ?? '1';
+    final totalDays = booking['total_days_at_stay']?.toString() ?? '1';
 
-    final finalPayable = booking['Final_Payable_Amount'] ??
-        booking['Original_Amount'] ??
-        booking['All_Days_Price'] ??
+    final finalPayable = booking['final_payable_amount'] ??
+        booking['original_amount'] ??
+        booking['all_days_price'] ??
         0;
 
-    final paymentStatus = booking['Payment_Status']?.toString() ?? 'Pending';
-    final refundStatus = booking['Refund_Status']?.toString() ?? 'None';
+    final paymentStatus = booking['payment_status']?.toString() ?? 'Pending';
+    final refundStatus = booking['refund_status']?.toString() ?? 'None';
 
     Color statusColor;
     switch (bookingStatus.toLowerCase()) {

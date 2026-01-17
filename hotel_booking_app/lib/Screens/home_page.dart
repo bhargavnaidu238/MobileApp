@@ -147,11 +147,11 @@ class _HomePageState extends State<HomePage> {
     final normalized = <String, dynamic>{};
     normalized.addAll(user);
 
-    if (!normalized.containsKey('User_ID') || normalized['User_ID'] == null) {
-      normalized['User_ID'] = normalized['userId'] ?? normalized['id'] ?? normalized['ID'] ?? '';
+    if (!normalized.containsKey('user_id') || normalized['user_id'] == null) {
+      normalized['user_id'] = normalized['userId'] ?? normalized['id'] ?? normalized['ID'] ?? '';
     }
-    if (!normalized.containsKey('Email') || normalized['Email'] == null) {
-      normalized['Email'] = normalized['email'] ?? normalized['EmailAddress'] ?? '';
+    if (!normalized.containsKey('email') || normalized['email'] == null) {
+      normalized['email'] = normalized['email'] ?? normalized['EmailAddress'] ?? '';
     }
 
     return normalized;
@@ -395,8 +395,8 @@ class _HomePageState extends State<HomePage> {
               context,
               '/profile',
               arguments: {
-                'email': normalizedUser['Email'],
-                'userId': normalizedUser['User_ID'],
+                'email': normalizedUser['email'],
+                'userId': normalizedUser['user_id'],
               },
             );
           },
