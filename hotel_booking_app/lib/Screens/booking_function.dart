@@ -200,7 +200,7 @@ class _BookingPageState extends State<BookingPage> {
     final selPrice = hotel['selected_room_price'] ?? hotel['selected_room_price'];
     if (selPrice != null) return double.tryParse(selPrice.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
     if (availableRoomsMap.isEmpty) return 0.0;
-    final key = (hotel['selected_room_type'] ?? selectedRoomType ?? '').toString();
+    final key = (hotel['Selected_Room_Type'] ?? selectedRoomType ?? '').toString();
     if (key.isNotEmpty && availableRoomsMap.containsKey(key)) return double.tryParse(availableRoomsMap[key].toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
     return double.tryParse(availableRoomsMap.values.first.toString().replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0.0;
   }
@@ -349,10 +349,10 @@ class _BookingPageState extends State<BookingPage> {
         if (!isPgMode && rooms > 1 && availableRoomsMap.isNotEmpty) ...[
           _buildSectionHeader("SELECT EXTRA ROOM TYPES"),
           _buildDesignCard(children: [
-            Text("Default Selection: 1x ${hotel['selected_room_type']}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey)),
+            Text("Default Selection: 1x ${hotel['Selected_Room_Type']}", style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.blueGrey)),
             Text("Remaining selection count: ${maxExtraSelectable - currentSelectedCount}", style: const TextStyle(fontSize: 12, color: Colors.orange)),
             const Divider(),
-            ...availableRoomsMap.entries.where((e) => e.key != hotel['selected_room_type']).map((entry) {
+            ...availableRoomsMap.entries.where((e) => e.key != hotel['Selected_Room_Type']).map((entry) {
               bool isChecked = selectedExtraRooms[entry.key.toString()] ?? false;
               bool canSelectMore = currentSelectedCount < maxExtraSelectable;
               return CheckboxListTile(
@@ -421,9 +421,13 @@ class _BookingPageState extends State<BookingPage> {
     final hotelId = hotel['hotel_id'] ?? hotel['hotel_id'] ?? hotel['PG_ID'] ?? hotel['pg_id'] ?? '';
     String extraRoomsStr = selectedExtraRooms.entries.where((e) => e.value).map((e) => e.key).join(", ");
 
-    String mainRoom = (hotel['selected_room_type'] ?? "").toString();
+    String mainRoom = (hotel['Selected_Room_Type'] ?? "").toString();
     List<String> extras = selectedExtraRooms.entries.where((e) => e.value).map((e) => e.key).toList();
     int baseCount = (rooms - extras.length) > 0 ? (rooms - extras.length) : 1;
+    String finalRoomDesc = "$mainRoom (x$baseCount)";
+    if (extras.isNotEmpty) {
+      finalRoomDesc += ", " + extras.map((e) => "$e (x1)").join(", ");
+    }
 
     Map<String, dynamic> bookingData = {
       "partner_id": partnerId,
@@ -468,7 +472,7 @@ class _BookingPageState extends State<BookingPage> {
       });
     } else {
       bookingData.addAll({
-        "selected_room_type": mainRoom,
+        "Selected_Room_Type": mainRoom,
         "selected_room_price": (hotel['selected_room_price'] ?? "0").toString(),
         "room_price_per_month": pgMonthlyPrice.toStringAsFixed(2),
         "all_months_price": pgTotalForMonths.toStringAsFixed(2),
@@ -495,7 +499,7 @@ class _BookingPageState extends State<BookingPage> {
           _summaryRow("Room Type", mainRoom),
           if (extraRoomsStr.isNotEmpty) _summaryRow("Extra Rooms", extraRoomsStr),
         ] else ...[
-          _summaryRow("Room Type", (hotel['selected_room_type'] ?? "").toString()),
+          _summaryRow("Room Type", (hotel['Selected_Room_Type'] ?? "").toString()),
           _summaryRow("Persons", "$persons"),
           _summaryRow("Months", "$months"),
         ],
